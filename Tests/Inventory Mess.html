@@ -1,0 +1,45 @@
+Select fin.SEASON as RETAILSEASON, ori.season,ori.inventory_retail as CURRENTSTOCKRETAIL, 
+ori.inventory_current as CURRENTSTOCKCURRENT, ori.inventory_cost as CURRENTSTOCKCOST, 
+ori.current_units as CURRENTSTOCKQTY,  fin.NETQTY as NETQTYSOLD, fin.GROSSSALES as SEASONGROSSSALES, 
+fin.NETSALES as SEASONNETSALES, fin.NETCOGS as SEASONNETCOGS
+from
+(SELECT mid(c.sku, locate('-', c.sku)+1,3) as season, sum(price.value*stock.qty) as inventory_retail, 
+sum(ifnull(s_price.value, price.value) *stock.qty) as inventory_current,
+sum(cost.value *stock.qty) as inventory_cost, sum(stock.qty) as current_units
+FROM catalog_product_entity c
+left join catalog_product_entity_varchar cpev on cpev.entity_id = c.entity_id and cpev.attribute_id=71 
+left join catalog_product_entity_decimal cost on c.entity_id=cost.entity_id and cost.attribute_id=79
+left join catalog_product_entity_decimal price on c.entity_id=price.entity_id and price.attribute_id=75
+left join catalog_product_entity_decimal s_price on c.entity_id=s_price.entity_id and s_price.attribute_id=76
+left join cataloginventory_stock_status stock on c.entity_id=stock.product_id 
+where c.type_id like 'simple'
+group by season) as ori
+left join
+(SELECT sal.SEASON as SEASON, sum(sal.DISCOUNT) as DISCOUNTS, sum(sal.COST*sal.QTYORDERED)-sum(sal.COST*sal.QTYRETURNED) as COGS, 
+sum(sal.QTYORDERED) as QTYORD, sum(sal.QTYRETURNED) as QTYRET, 
+sum(sal.QTYORDERED)-sum(sal.QTYRETURNED) as NETQTY, sum(sal.PRICE*sal.QTYORDERED) as GROSSSALES, 
+sum(sal.PRICE*sal.QTYORDERED)-sum(sal.DISCOUNT*sal.QTYORDERED)-sum(sal.PRICE*sal.QTYRETURNED)+sum(sal.DISCOUNT*sal.QTYRETURNED) as NETSALES,
+sum(sal.COST*sal.QTYORDERED)-sum(sal.COST*sal.QTYRETURNED) as NETCOGS
+from
+(SELECT sa.increment_id as 'Increment ID', s.order_id as 'Order ID', s.product_id as 'Product ID', 
+s.child_id, s.created_at as 'Sale Date', s.sku as SKU,  mid(SKU, locate('-', SKU)+1,3) as SEASON, s.name as 'Item Name', 
+s.price as PRICE, s.base_cost as COST, s.qty_ordered as QTYORDERED, s.qty_refunded as QTYRETURNED,  
+s.discount_amount as DISCOUNT, cped.value as 'Special Price' 
+ FROM sales_flat_order sa 
+left join  (SELECT se.order_id, se.created_at, se.sku, se.name, 
+IF(se.parent_item_id,a.product_id,se.product_id) as product_id,
+IF(se.parent_item_id,se.product_id,a.product_id) as child_id,
+IF(se.parent_item_id,a.price,se.price) as price, 
+IF(se.parent_item_id,a.base_cost,se.base_cost) as base_cost,
+IF(se.parent_item_id,a.qty_canceled, se.qty_canceled) as qty_canceled,
+IF(se.parent_item_id,a.qty_invoiced, se.qty_invoiced) as qty_invoiced,
+IF(se.parent_item_id,a.qty_ordered, se.qty_ordered) as qty_ordered,
+IF(se.parent_item_id,a.qty_refunded, se.qty_refunded) as qty_refunded,
+IF(se.parent_item_id,a.discount_percent, se.discount_percent) as discount_percent, 
+IF(se.parent_item_id,a.discount_amount, se.discount_amount) as discount_amount FROM sales_flat_order_item se left join sales_flat_order_item a on
+se.parent_item_id=a.item_id where se.product_type='simple') as s on  s.order_id=sa.entity_id
+left join catalog_product_entity_int cpei on s.product_id=cpei.entity_id and attribute_id=140
+left join eav_attribute_option_value eaov on cpei.value= eaov.option_id and eaov.store_id=1
+left join catalog_product_entity_decimal as cped on (cped.entity_id=s.product_id and cped.attribute_id=76)) as sal
+group by sal.SEASON) as fin on ori.season=fin.SEASON
+where ori.season <> 999 order by Field(ori.season, 'F12','R13','S13','P13','F13')
