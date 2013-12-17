@@ -3,25 +3,23 @@
 <style>
 #tarjeta {
 		width: 1000px;
-		height: 630px;
-		position: relative;
-	
-		background-image: url(../images/giftcard.jpg);
+		height: 510px;
+		position: absolute;
+		background-image: url(../images/Snow_background.png);
+		overflow: hidden;
+}
+#container{
+    width: 1000px;
+    height: 510px;
+    position: relative;
 }
 
-#carousel-wrapper {
+#container img{
     width: 1000px;
-    height: 630px;
+    height: 510px;
     position: absolute;
-    z-index: -1;
-
 }
 
-#carousel-content .slide {
-    float: left;
-    width: 1000px;
-    height: 630px;
-}
 </style>
 
 <script type="text/javascript" src="../javascripts/ThreeCanvas.js"></script>
@@ -42,7 +40,7 @@ function moveAfter(){
 }
 
 			var SCREEN_WIDTH = 1000;
-			var SCREEN_HEIGHT = 630;
+			var SCREEN_HEIGHT = 510;
 
 			var container;
 
@@ -159,16 +157,8 @@ function moveAfter(){
 				
 			}				
 </script>
-
-<script>
-	document.observe(function(){ 
-	cw_slide = new Carousel('carousel-wrapper', $$('#carousel-content .slide'), $$('a.carousel-control', 'a.carousel-jumper'),{'auto':false,'frequency':7,'afterMove': moveAfter});
-			});
-
-</script>
-<div id="carousel-wrapper">
-		<img src="../images/backimg.png">
-		<div class="slide" id="tarjeta">
-		</div>
+<div id="container">
+	<img src="../images/window_outline.v2.png" style="z-index:1; opacity:1"/>
+	<div id="tarjeta">
 	</div>
-
+</div>
