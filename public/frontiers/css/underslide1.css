@@ -1,0 +1,131 @@
+.bg {
+background: url(../img/delfin.jpg) no-repeat center top;
+-webkit-background-size: cover;
+-moz-background-size: cover;
+-o-background-size: cover;
+background-size: cover;
+width: 100%;
+height: 400px;
+}
+
+#tekst {
+  width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 50px;
+  margin-bottom: 100px;
+}
+
+#tekst h2 {
+  font-size: 16px;
+}
+
+#tekst h2 {
+  font-size: 15px;
+}
+
+.knapper {
+text-align:center;
+margin-bottom:30px;
+}
+
+
+/*.btn {
+  background:#7fb8dc;
+  color: white;
+  width: 150px;
+  height: 40px;
+  margin-top: 35px;
+  font-size: 11px;
+  border: none;
+}
+
+.btn:hover {
+  background:white;
+  color: #7fb8dc;
+  width: 150px;
+  height: 40px;
+  margin-top: 35px;
+  font-size: 11px;
+  border: 1px solid #7fb8dc;
+}*/
+
+.btn-default, .btn-white {
+  background:#7fb8dc;
+  color: white;
+  width: 150px;
+  height: 40px;
+  margin-top: 35px;
+  font-size: 11px;
+  border: none;
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
+  border-radius: 0px;
+
+}
+
+
+
+.btn-white{
+  background: black;
+  color:white;
+  border: 1px solid black;
+}
+
+.btn-white:hover{
+  /*background: #ffffff;
+  color:#7abe9f;*/
+  border: 1px solid white;
+}
+
+.blacksection1 {
+  max-width: 100%;
+  background-color: #7abe9f;
+  margin-top:5%;
+  text-align: center;
+  color:white;
+  padding-top: 70px;
+  padding-bottom: 40px;
+}
+
+.map {
+  margin-bottom: -2%;
+}
+
+.map iframe{
+  width: 100%;
+  height: 400px;
+  position: relative;
+  margin-top: 50px;
+}
+
+.footer {
+  height: 50px;
+  width: 100%;
+  background-color: black;
+  text-align: center;
+  color: #fbfbfb;
+  font-style: italic;
+  font-family: 'Arimo', sans-serif;
+  font-size: 10px;
+  position: relative;
+}
+
+.section-padding1 {
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+.headline {
+  padding-bottom:10px
+}
+
+
+
+
+.button-selected{
+  background: #ffffff;
+  color:#7fb8dc;
+  border:1px solid #7fb8dc;
+  outline: none;
+}
